@@ -3,6 +3,7 @@
 namespace App\EventSubscriber;
 
 use App\Entity\AbstractEntity;
+use App\Entity\User;
 use DateTime;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
@@ -23,6 +24,11 @@ class EntityCreatedSubscriber implements EventSubscriber
 
         if ($object instanceof AbstractEntity) {
             $object->setCreated(new DateTime());
+
+        }
+        if ($object instanceof User) {
+            $object->setFailedAuth(0);
+
         }
     }
 }
