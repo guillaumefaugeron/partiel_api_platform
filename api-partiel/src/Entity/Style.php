@@ -2,26 +2,37 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"style_read"}}
+ *     )
+ *  @ApiFilter(SearchFilter::class, properties={"name": "start"})
  * @ORM\Entity(repositoryClass="App\Repository\StyleRepository")
  */
 class Style extends AbstractEntity
 {
     /**
      * @ORM\Id()
+     *
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("style_read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("style_read")
+     * @Groups("artist_read")
      */
     private $name;
 

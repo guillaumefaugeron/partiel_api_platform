@@ -2,14 +2,26 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Dto\ArtistOutput;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+
 
 /**
- * @ApiResource()
+ *
+ * @ApiResource(
+ *     output=ArtistOutput::class,
+ *     normalizationContext={"groups"={"artist_read"}}
+ * )
+ *
+ * @ApiFilter(SearchFilter::class, properties={"name": "ipartial","styles.name": "ipartial"})
  * @ORM\Entity(repositoryClass="App\Repository\ArtistRepository")
+ *
  */
 class Artist extends AbstractEntity
 {
@@ -22,11 +34,14 @@ class Artist extends AbstractEntity
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("album_read")
+     * @Groups("user_read")
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups("user_read")
      */
     private $startYear;
 

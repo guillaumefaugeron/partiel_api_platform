@@ -2,14 +2,25 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\Types\AbstractList;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\NumericFilter;
+
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"album_read"}}
+ *
+ * )
+ *@ApiFilter(SearchFilter::class, properties={"name": "ipartial"})
+ * @ApiFilter(RangeFilter::class, properties={"releaseYear"})
+ * @ApiFilter(NumericFilter::class, properties={"releaseYear"})
  * @ORM\Entity(repositoryClass="App\Repository\AlbumRepository")
  */
 class Album extends AbstractEntity
@@ -18,20 +29,24 @@ class Album extends AbstractEntity
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("album_read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("album_read")
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups("album_read")
      */
     private $releaseYear;
 
     /**
+     * @Groups("album_read")
      * @ORM\OneToMany(targetEntity="App\Entity\Artist", mappedBy="album")
      */
     private $artist;

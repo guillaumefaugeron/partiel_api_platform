@@ -28,7 +28,6 @@ class AppFixtures extends Fixture
         $faker = (new Factory())::create('fr_FR');
         $styles = [];
         $artists = [];
-        $albums = [];
 
 
 
@@ -54,7 +53,6 @@ class AppFixtures extends Fixture
             $album->setName($faker->realText(25,4))
                 ->addArtist($artists[$faker->numberBetween(0, count($artists) - 1)])
                 ->setReleaseYear($faker->numberBetween(1940,2000));
-            $albums[]= $album;
             $manager->persist($album);
         }
 
@@ -63,7 +61,15 @@ class AppFixtures extends Fixture
 
 
         $user = new User();
-        $user->setEmail("test@test.test")
+        $user->setEmail("user@user")
+            ->setPassword($this->encoder->encodePassword($user,'1234'))
+            ->setRoles(['ROLE_USER'])
+            ->addArtist($artists[$faker->numberBetween(0, count($artists) - 1)])
+            ->addArtist($artists[$faker->numberBetween(0, count($artists) - 1)]);
+        $manager->persist($user);
+
+        $user = new User();
+        $user->setEmail("admin@admin")
             ->setPassword($this->encoder->encodePassword($user,'1234'))
             ->setRoles(['ROLE_ADMIN'])
             ->addArtist($artists[$faker->numberBetween(0, count($artists) - 1)])
